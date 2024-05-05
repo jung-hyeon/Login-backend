@@ -11,6 +11,11 @@ function login() {
     const req = {
         id: id.value,
         password: password.value,
-    };
+    }; 
     console.log(req);
+    console.log(JSON.stringify(req));
+
+    fetch("/login", {
+        body: JSON.stringify(req)
+    })
 }
