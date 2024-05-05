@@ -1,0 +1,25 @@
+# Node.js
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Environment
+.env
+
+# Compiled binary addons (if using npm rebuild)
+build/Release
+
+# Dependency directories
+.jenkins/
+
+# Debug files
+.DS_Store
+Thumbs.db
