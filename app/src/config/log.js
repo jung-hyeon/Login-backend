@@ -1,9 +1,46 @@
-const fs = require("fs");
-const appRoot = require("app-root-path");
+const {createLogger, transports, format} = require("winston");
+const {combine, timestamp, label, printf, simple, colorize} = format;
 
-const accessLogStream = fs.createWriteStream(
-    `${appRoot}/log/access.log`,
-    {flags: "a"}
-);
+const printFormat =     printf(({ timestamp, label, level, message }) => {
+    return `${timestamp} [${label}] ${level} : ${message}`;
+});
 
-module.exports = accessLogStream;
+const printLogFormat = {
+    file: combine(
+        label({
+            label: "백엔드 맛보기"
+        }),
+        //colorize(),
+        timestamp({
+            format: "YYYY-MM-DD HH:mm:dd",
+        }),
+        printFormat
+    ),
+    console: combine(
+        colorize(),
+        simple(),
+    ),
+};
+
+const opts = {
+    file: new transports.File({
+        filename: "access.log",
+        dirname: "./logs",
+        level: "info",
+        format: printLogFormat.file,
+    }),
+    console: new transports.Console({
+        level: "info",
+        format: printLogFormat.console,
+    }),
+}
+
+const log = createLogger({
+    transports: [opts.file],
+});
+
+if (process.env.NODE_ENV !== "production") {
+    log.add(opts.console);
+}
+
+module.exports = log;
